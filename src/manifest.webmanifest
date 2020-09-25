@@ -1,0 +1,18 @@
+{
+	"xr_type": "aardvark-gadget@^1.0.2",
+	"name": "Cardvark",
+	"icons": [
+		{
+			"src": "models/placeholder.glb",
+			"type": "model/gltf-binary"
+		}
+	],
+	"aardvark": {
+		"permissions": [
+			"scenegraph"
+		],
+		"browserWidth": 1024,
+		"browserHeight": 1024,
+		"startAutomatically": false
+	}
+}

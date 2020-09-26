@@ -76,7 +76,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 
     public render(){
         return(
-            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
+            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 } remoteInterfaceLocks={[]}>
                 <AvTransform translateY={ 0.1 } >
                     <AvGrabButton modelUri={ g_builtinModelPlus } onClick={ this.drawCard.bind(this) } />
                     <AvTransform translateY={ 0.1 } >

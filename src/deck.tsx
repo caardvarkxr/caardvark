@@ -90,8 +90,8 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
                         ))}
                     </AvTransform>
                 </AvTransform>
-                <AvTransform translateX={0.1} rotateX={90}>
-                    <AvGrabButton modelUri={ g_builtinModelGear} onClick={ this.gather.bind(this) } />
+                <AvTransform translateX={0.06} rotateX={45} rotateY={45}>
+                    <AvGrabButton modelUri={ "models/card_return_icon.glb" } onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>
         );

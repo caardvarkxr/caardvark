@@ -4,9 +4,12 @@ import bind from 'bind-decorator';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { PlayingCard } from './card';
+import { CardValue} from './types';
 
 type DeckProps = {
 }
+var drawnCards: CardValue[] = new Array();
+var remainingCards: CardValue[] = new Array();
 
 class CardDeck extends React.Component<{}, DeckProps>{
 
@@ -15,10 +18,36 @@ class CardDeck extends React.Component<{}, DeckProps>{
 
 	constructor( props: any )
 	{
+
         super( props );
-        for (var i = 0; i < 52; i++) {
+        for (let i = 0; i < 52; i++) {
+            remainingCards.push(i);
             this.cardComponents.push(<PlayingCard index={i} suit={i/13} />)
         }
+        this.shuffle();
+    }
+    public gather(){
+        let len = drawnCards.length
+        for(let i = 0; i < len; i++){
+            remainingCards.push(drawnCards.pop());
+        }
+        this.shuffle();
+    }
+    public shuffle(){
+        let len = remainingCards.length-1
+        for(let i = 0; i< (len); i++){
+            let j = Math.floor(Math.random()*(len));
+            let tempval = remainingCards[i];
+            remainingCards[i] = remainingCards[j];
+            remainingCards[j] = tempval;
+        }
+
+    }
+
+    public drawCard(){
+        let temp = remainingCards.pop();
+        drawnCards.push(temp);
+        return temp;        
     }
 
     public render(){

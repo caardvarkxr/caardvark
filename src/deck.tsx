@@ -22,7 +22,7 @@ class CardDeck extends React.Component<{}, DeckProps>{
         super( props );
         for (let i = 0; i < 52; i++) {
             remainingCards.push(i);
-            this.cardComponents.push(<PlayingCard index={i} suit={i/13} />)
+            this.cardComponents.push(<PlayingCard index={i} suit={i/13} key={i} />)
         }
         this.shuffle();
     }

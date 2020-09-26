@@ -1,61 +1,94 @@
-import {  AvStandardGrabbable, AvTransform  } from '@aardvarkxr/aardvark-react';
-import { g_builtinModelBox } from '@aardvarkxr/aardvark-shared';
-import * as React from 'react';
+import {  AvGrabButton, AvStandardGrabbable, AvTransform  } from '@aardvarkxr/aardvark-react';
+import { g_builtinModelBox, g_builtinModelGear, g_builtinModelPlus } from '@aardvarkxr/aardvark-shared';
+import React, {useState} from 'react';
 import { PlayingCard } from './card';
 import { CardValue} from './types';
 
 type DeckProps = {
 }
-var drawnCards: CardValue[] = new Array();
-var remainingCards: CardValue[] = new Array();
 
-class CardDeck extends React.Component<{}, DeckProps>{
+type DeckState = {
+    drawnCards: CardValue[];
+    remainingCards: CardValue[];
+}
 
-    cardComponents = [];
+
+class CardDeck extends React.Component<DeckProps, DeckState>{
+
 
 	constructor( props: any )
 	{
 
         super( props );
+
+        let fullDeck = []
         for (let i = 0; i < 52; i++) {
-            remainingCards.push(i);
+            fullDeck.push(i);
+        }                        
+        this.shuffle(fullDeck);
+
+        this.state = {
+            drawnCards: [],
+            remainingCards: fullDeck
         }
-        for(let i = 0; i<52; i++){
-            this.cardComponents.push(<PlayingCard card={this.drawCard()} key={i} />)
-        }
-        this.shuffle();
+
     }
 
     public gather(){
-        let len = drawnCards.length
+        let len = this.state.drawnCards.length
+        let deck = this.state.remainingCards;
+        let drawn = this.state.drawnCards;
+
         for(let i = 0; i < len; i++){
-            remainingCards.push(drawnCards.pop());
+            deck.push(drawn.pop());
         }
-        this.shuffle();
+        this.shuffle(deck);
+
+        this.setState({
+            remainingCards: deck,
+            drawnCards: []
+        });
     }
 
-    public shuffle(){
-        let len = remainingCards.length-1
+    public shuffle(cards: CardValue[]){
+        let len = cards.length-1
         for(let i = 0; i< (len); i++){
             let j = Math.floor(Math.random()*(len));
-            let tempval = remainingCards[i];
-            remainingCards[i] = remainingCards[j];
-            remainingCards[j] = tempval;
+            let tempval = cards[i];
+            cards[i] = cards[j];
+            cards[j] = tempval;
         }
-
+        return cards;
     }
-
+    
     public drawCard(){
-        let temp = remainingCards.pop();
-        drawnCards.push(temp);
-        return temp;        
+        let deck = this.state.remainingCards;
+        let drawn = this.state.drawnCards;
+
+        let temp = deck.pop();
+        drawn.push(temp);
+
+        this.setState({
+            remainingCards: deck,
+            drawnCards: drawn
+        });
     }
 
     public render(){
         return(
             <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
                 <AvTransform translateY={ 0.1 } >
-                    {this.cardComponents}
+                    <AvGrabButton modelUri={ g_builtinModelPlus } onClick={ this.drawCard.bind(this) } />
+                    <AvTransform translateY={ 0.1 } >
+
+                        {this.state.drawnCards.map(cardVal => (
+                            <PlayingCard card={cardVal} key={cardVal} />
+                        ))}
+
+                    </AvTransform>
+                </AvTransform>
+                <AvTransform translateX={0.1}>
+                    <AvGrabButton modelUri={ g_builtinModelGear} onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>
         );

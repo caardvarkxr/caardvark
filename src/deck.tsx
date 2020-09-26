@@ -52,9 +52,12 @@ class CardDeck extends React.Component<{}, DeckProps>{
 
     public render(){
         return(
+            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
             <div>
-                {this.cardComponents}
-            </div>
+                <AvTransform translateY={ 0.1 } >
+                    {this.cardComponents}
+                </AvTransform>
+            </div></AvStandardGrabbable>
         );
     }
 

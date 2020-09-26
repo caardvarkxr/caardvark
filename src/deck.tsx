@@ -1,8 +1,6 @@
-import { AvPanel, AvPrimitive, AvStandardGrabbable, AvTransform, DefaultLanding, PrimitiveType } from '@aardvarkxr/aardvark-react';
-import { Av, g_builtinModelBox } from '@aardvarkxr/aardvark-shared';
-import bind from 'bind-decorator';
+import {  AvStandardGrabbable, AvTransform  } from '@aardvarkxr/aardvark-react';
+import { g_builtinModelBox } from '@aardvarkxr/aardvark-shared';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { PlayingCard } from './card';
 import { CardValue} from './types';
 
@@ -12,7 +10,6 @@ var drawnCards: CardValue[] = new Array();
 var remainingCards: CardValue[] = new Array();
 
 class CardDeck extends React.Component<{}, DeckProps>{
-
 
     cardComponents = [];
 
@@ -26,6 +23,7 @@ class CardDeck extends React.Component<{}, DeckProps>{
         }
         this.shuffle();
     }
+
     public gather(){
         let len = drawnCards.length
         for(let i = 0; i < len; i++){
@@ -33,6 +31,7 @@ class CardDeck extends React.Component<{}, DeckProps>{
         }
         this.shuffle();
     }
+
     public shuffle(){
         let len = remainingCards.length-1
         for(let i = 0; i< (len); i++){
@@ -53,15 +52,12 @@ class CardDeck extends React.Component<{}, DeckProps>{
     public render(){
         return(
             <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
-            <div>
                 <AvTransform translateY={ 0.1 } >
                     {this.cardComponents}
                 </AvTransform>
-            </div></AvStandardGrabbable>
+            </AvStandardGrabbable>
         );
     }
-
-
 } 
 
 export default CardDeck;

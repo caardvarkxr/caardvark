@@ -1,10 +1,10 @@
 import { AvComposedEntity,  AvPrimitive, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
 import { AvVolume, EVolumeType,  } from '@aardvarkxr/aardvark-shared';
 import * as React from 'react';
+import {CardValue} from './types';
 
 type CardProps = {
-    suit: number;
-    index: number;
+    card: CardValue;
 }
 
 const cardWidth = 0.057;

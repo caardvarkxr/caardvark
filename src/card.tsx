@@ -1,8 +1,6 @@
-import { AvComposedEntity, AvPanel, AvPrimitive, AvStandardGrabbable, AvTransform, DefaultLanding, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
-import { Av, AvVolume, EVolumeType, g_builtinModelBox } from '@aardvarkxr/aardvark-shared';
-import bind from 'bind-decorator';
+import { AvComposedEntity,  AvPrimitive, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
+import { AvVolume, EVolumeType,  } from '@aardvarkxr/aardvark-shared';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 type CardProps = {
     suit: number;
@@ -30,10 +28,8 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
     } as AvVolume;
 
 		return (
-                <div>
-                    <AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
-                        <AvPrimitive type={PrimitiveType.Cube} width={0.057} height={0.08} depth={0.001} />
-                    </AvComposedEntity>
-				</div>
+				<AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
+					<AvPrimitive type={PrimitiveType.Cube} width={0.057} height={0.08} depth={0.001} />
+				</AvComposedEntity>
 		);
 }

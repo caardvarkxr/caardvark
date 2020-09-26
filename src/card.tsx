@@ -1,5 +1,5 @@
-import { AvComposedEntity,  AvPrimitive, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
-import { AvVolume, EVolumeType,  } from '@aardvarkxr/aardvark-shared';
+import { AvComposedEntity,  AvModel,  AvPrimitive, AvTransform, GadgetSeedContainerComponent, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
+import { AvVolume, EVolumeType, g_builtinModelCylinder, g_builtinModelPanel,  } from '@aardvarkxr/aardvark-shared';
 import * as React from 'react';
 import {CardValue} from './types';
 
@@ -29,7 +29,12 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
 
 		return (
 				<AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
-					<AvPrimitive type={PrimitiveType.Cube} width={0.057} height={0.08} depth={0.001} />
+					<AvTransform scaleX={0.056} scaleY={0.001} scaleZ={0.0889} rotateX={90}> 
+						<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[props.card] + ".png"} />
+					</AvTransform>
+					<AvTransform translateZ={-0.001} scaleX={0.056} scaleY={0.001} scaleZ={0.0889} rotateX={90}> 
+						<AvModel uri={g_builtinModelPanel} />
+					</AvTransform>
 				</AvComposedEntity>
 		);
 }

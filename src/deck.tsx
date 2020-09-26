@@ -22,7 +22,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         super( props );
 
         let fullDeck = []
-        for (let i = 0; i < 52; i++) {
+        for (let i = 0; i < 4; i++) {
             fullDeck.push(i);
         }                        
         this.shuffle(fullDeck);
@@ -51,8 +51,8 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
     }
 
     public shuffle(cards: CardValue[]){
-        let len = cards.length-1
-        for(let i = 0; i< (len); i++){
+        let len = cards.length
+        for(let i = 0; i < (len); i++){
             let j = Math.floor(Math.random()*(len));
             let tempval = cards[i];
             cards[i] = cards[j];
@@ -62,6 +62,9 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
     }
     
     public drawCard(){
+        if(this.state.remainingCards.length == 0){
+            return;
+        }
         let deck = this.state.remainingCards;
         let drawn = this.state.drawnCards;
 
@@ -78,16 +81,16 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         return(
             <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
                 <AvTransform translateY={ 0.1 } >
-                    <AvGrabButton modelUri={ g_builtinModelPlus } onClick={ this.drawCard.bind(this) } />
+                    <AvTransform rotateX={90}>
+                        <AvGrabButton modelUri={ g_builtinModelPlus } onClick={ this.drawCard.bind(this) } />
+                    </AvTransform>
                     <AvTransform translateY={ 0.1 } >
-
                         {this.state.drawnCards.map(cardVal => (
                             <PlayingCard card={cardVal} key={cardVal} />
                         ))}
-
                     </AvTransform>
                 </AvTransform>
-                <AvTransform translateX={0.1}>
+                <AvTransform translateX={0.1} rotateX={90}>
                     <AvGrabButton modelUri={ g_builtinModelGear} onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>

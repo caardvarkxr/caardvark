@@ -33,6 +33,7 @@ module.exports =
 					{ from: './src/manifest.webmanifest', to: 'manifest.webmanifest' },
 					{ from: './src/models/placeholder.glb', to: 'models/placeholder.glb' },
 					{ from: './src/models/caardvark_icon.glb', to: 'models/caardvark_icon.glb' },
+					{ from: './Assets/Card_Textures/', to: 'card_textures/' },
 				]
 				),
 		],

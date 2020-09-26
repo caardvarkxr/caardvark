@@ -1,7 +1,10 @@
 body, html
 {
-	background-color: lightskyblue;
-	height: 100%;
+	background-color: red;
+}
+
+.CardText {
+	font-size: 3rem;
 }
 
 .Button 
@@ -17,12 +20,6 @@ body, html
 .Button:hover
 {
 	background-color: red;
-}
-
-.FullPage
-{
-	width: 100%;
-	height: 100%;
 }
 
 .NoGrabHighlight

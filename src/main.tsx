@@ -3,6 +3,7 @@ import { EAction, EHand, g_builtinModelBox, InitialInterfaceLock, Av } from '@aa
 import bind from 'bind-decorator';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { PlayingCard } from './card';
 
 const k_TestPanelInterface = "test_panel_counter@1";
 
@@ -192,17 +193,8 @@ class MyGadget extends React.Component< {}, TestPanelState >
 		}
 
 		return (
-			<div className={ sDivClasses } >
-				<div>
-					<AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.03 } remoteGadgetCallback={ this.onRemoteEvent }
-						modelColor="lightblue" useInitialParent={ true } remoteInterfaceLocks={ remoteInitLocks } ref={ this.m_grabbableRef }>
-						<AvTransform translateY={ 0.08 } >
-							<AvPanel interactive={true} widthInMeters={ 0.1 }/>
-						</AvTransform>
-					</AvStandardGrabbable>
-				</div>
-				{ AvGadget.instance().isRemote ? this.renderRemote() : this.renderLocal() }
-			</div> );
+			<PlayingCard suit={2} index={8}/>
+			 );
 	}
 
 }

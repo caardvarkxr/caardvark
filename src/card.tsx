@@ -16,7 +16,7 @@ const cardGrabMargin = 0.01;
 
 export const PlayingCard: React.FC<CardProps> = (props) => {
 
-    const [ moveable, setMoveable ] = React.useState( new MoveableComponent( () => {}, true, true ) );
+    const [ moveable, setMoveable ] = React.useState( new MoveableComponent( () => {}, true, false ) );
 
     const k_cardVolume =
 	{

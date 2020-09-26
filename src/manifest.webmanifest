@@ -3,7 +3,7 @@
 	"name": "Cardvark",
 	"icons": [
 		{
-			"src": "models/placeholder.glb",
+			"src": "models/caardvark_icon.glb",
 			"type": "model/gltf-binary"
 		}
 	],

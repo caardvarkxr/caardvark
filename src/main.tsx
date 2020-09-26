@@ -4,6 +4,7 @@ import bind from 'bind-decorator';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { PlayingCard } from './card';
+import CardDeck from './deck';
 
 const k_TestPanelInterface = "test_panel_counter@1";
 
@@ -193,7 +194,7 @@ class MyGadget extends React.Component< {}, TestPanelState >
 		}
 
 		return (
-			<PlayingCard suit={2} index={8}/>
+			<CardDeck/>
 			 );
 	}
 

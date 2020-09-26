@@ -22,9 +22,9 @@ class CardDeck extends React.Component<{}, DeckProps>{
         super( props );
         for (let i = 0; i < 52; i++) {
             remainingCards.push(i);
-            this.shuffle();
             this.cardComponents.push(<PlayingCard index={i} suit={i/13} />)
         }
+        this.shuffle();
     }
     public gather(){
         let len = drawnCards.length

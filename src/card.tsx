@@ -33,7 +33,7 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
 						<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[props.card] + ".png"} />
 					</AvTransform>
 					<AvTransform translateZ={-0.001} scaleX={0.056} scaleY={0.001} scaleZ={0.0889} rotateX={90}> 
-						<AvModel uri={g_builtinModelPanel} />
+						<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/cardback.png"} />
 					</AvTransform>
 				</AvComposedEntity>
 		);

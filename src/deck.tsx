@@ -19,12 +19,16 @@ class CardDeck extends React.Component<{}, DeckProps>{
         for (var i = 0; i < 52; i++) {
             this.cardComponents.push(<PlayingCard index={i} suit={i/13} />)
         }
-	}
+    }
+
     public render(){
         return(
+            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 }>
             <div>
-                {this.cardComponents}
-            </div>
+                <AvTransform translateY={ 0.1 } >
+                    {this.cardComponents}
+                </AvTransform>
+            </div></AvStandardGrabbable>
         );
     }
 

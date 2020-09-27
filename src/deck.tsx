@@ -15,16 +15,15 @@ type DeckState = {
 
 class CardDeck extends React.Component<DeckProps, DeckState>{
 
-
 	constructor( props: any )
 	{
-
         super( props );
 
         let fullDeck = []
         for (let i = 0; i < 52; i++) {
             fullDeck.push(i);
         }                        
+
         this.shuffle(fullDeck);
 
         this.state = {

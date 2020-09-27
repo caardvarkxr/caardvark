@@ -1,10 +1,30 @@
-import { AvComposedEntity,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
-import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel,  } from '@aardvarkxr/aardvark-shared';
+import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
+import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
+import bind from 'bind-decorator';
 import * as React from 'react';
 import {CardValue} from './types';
 
 type CardProps = {
-    card: CardValue;
+	card: CardValue;
+}
+
+type CardState = {
+	highlight: CardHighlightType;
+}
+
+export enum CardHighlightType
+{
+	/** Nothing interesting is going on with the grabbable. */
+	None = 0,
+
+	/** There is a grabber within grabbing range of the grabbable. */
+	InRange = 1,
+
+	/** There is a grabber actively grabbing the grabbable, and it isn't attached to anything. */
+	Grabbed = 2,
+
+	/** The grabbed grabbable is within drop range of a hook. */
+	InHookRange = 3,
 }
 
 const cardWidth = 0.057;
@@ -12,11 +32,11 @@ const cardHeight = 0.08;
 const cardDepth = 0.001;
 const cardGrabMargin = 0.00;
 
-export const PlayingCard: React.FC<CardProps> = (props) => {
+export class PlayingCard extends React.Component<CardProps, CardState>{
 
-    const [ moveable, setMoveable ] = React.useState( new MoveableComponent( () => {}, false, true ) );
+	private moveableComponent: MoveableComponent;
 
-    const k_cardVolume =
+    private k_cardHitbox =
 	{
 		type: EVolumeType.AABB,
 		aabb: 
@@ -25,16 +45,63 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
 			zMin: -cardDepth - cardGrabMargin, zMax: cardDepth + cardGrabMargin,
 			yMin: -cardHeight - cardGrabMargin, yMax: cardHeight + cardGrabMargin,	
 		}
-    } as AvVolume;
+	} as AvVolume;
+
+	constructor( props: any )
+	{
+		super( props );
+
+		this.moveableComponent =  new MoveableComponent( this.onMoveableUpdate, false, true );
+
+		this.state = {
+			highlight: CardHighlightType.None,
+		}
+	}
+
+	@bind
+	private async onMoveableUpdate()
+	{
+		let highlight;
+		switch( this.moveableComponent.state )
+		{
+			default:
+			case MoveableComponentState.Idle:
+			case MoveableComponentState.InContainer:
+				highlight = CardHighlightType.None;
+				break;
+
+			case MoveableComponentState.GrabberNearby:
+			case MoveableComponentState.Menu:
+				highlight = CardHighlightType.InRange;
+				break;
+
+			case MoveableComponentState.Grabbed:
+				highlight = CardHighlightType.Grabbed;
+				break;
+		}
+
+		this.setState( ( oldState: CardState ) =>
+		{
+			return { ...oldState, highlight };
+		} );
+
+	}
+
+	public render(){
+
+		let scale = 1.4;
+		scale *= this.state.highlight == CardHighlightType.InRange ? 1.1 : 1.0;
+
 
 		return (
-			<AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
-				<AvTransform scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
-					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[props.card] + ".png"} />
+			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox}> 
+				<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
+					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
 				</AvTransform>
-				<AvTransform translateZ={-0.001} scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
+				<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/cardback.png"} />
 				</AvTransform>
 			</AvComposedEntity>
 		);
+	}
 }

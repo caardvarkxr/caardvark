@@ -22,7 +22,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         super( props );
 
         let fullDeck = []
-        for (let i = 0; i < 13; i++) {
+        for (let i = 0; i < 52; i++) {
             fullDeck.push(i);
         }                        
         this.shuffle(fullDeck);

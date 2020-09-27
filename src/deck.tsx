@@ -80,15 +80,15 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
     public render(){
         return(
             <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.04 } remoteInterfaceLocks={[]}>
-                <AvTransform translateY={ 0.10 } rotateX={0}>
+                <AvTransform translateY={ 0.05 } translateX={0.1} rotateX={45} >
                     <AvGrabButton modelUri={ "models/draw_card_icon.glb" } onClick={ this.drawCard.bind(this) } />
                 </AvTransform>
-                <AvTransform translateY={ 0.30 } rotateX={90} >
+                <AvTransform translateZ={ 0.15 } translateX={0.1} rotateX={90}>
                     {this.state.drawnCards.map(cardVal => (
                         <PlayingCard card={cardVal} key={cardVal} />
                     ))}
                 </AvTransform>
-                <AvTransform translateY={ 0.05 } translateX={0.10} rotateX={45} rotateY={45}>
+                <AvTransform translateY={ 0.05 } translateX={-0.10} rotateX={45} rotateY={45}>
                     <AvGrabButton modelUri={ "models/return_card_icon.glb" } onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>

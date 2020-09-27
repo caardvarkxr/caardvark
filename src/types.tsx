@@ -1,12 +1,4 @@
-
 export enum CardValue{
-	Spades1 = 0, Spades2 = 1,	Spades3 = 2,	Spades4 = 3,
-	Spades5 = 4, Spades6 = 5,	Spades7 = 6,	Spades8 = 7,
-	Spades9 = 8, Spades10 = 9, Spades11 = 10, Spades12 = 11,
-	Spades13 = 12
-	}
-
-/*export enum CardValue{
 	Clubs1 = 0,	Clubs2 = 1,	Clubs3 = 2,	Clubs4 = 3,
 	Clubs5 = 4,	Clubs6 = 5,	Clubs7 = 6,	Clubs8 = 7,
 	Clubs9 = 8,	Clubs10 = 9, Clubs11 = 10, Clubs12 = 11,
@@ -20,4 +12,4 @@ export enum CardValue{
 	Hearts2 = 40, Hearts3 = 41,	Hearts4 = 42, Hearts5 = 43,
 	Hearts6 = 44, Hearts7 = 45, Hearts8 = 46, Hearts9 = 47,
 	Hearts10 = 48, Hearts11 = 49, Hearts12 = 50, Hearts13 = 51
-	}*/
+	}

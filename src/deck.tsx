@@ -1,5 +1,5 @@
 import {  AvGrabButton, AvStandardGrabbable, AvTransform  } from '@aardvarkxr/aardvark-react';
-import { g_builtinModelBox, g_builtinModelGear, g_builtinModelPlus } from '@aardvarkxr/aardvark-shared';
+import { g_builtinModelBox, g_builtinModelGear, g_builtinModelHook, g_builtinModelPlus } from '@aardvarkxr/aardvark-shared';
 import React, {useState} from 'react';
 import { PlayingCard } from './card';
 import { CardValue} from './types';
@@ -79,18 +79,16 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 
     public render(){
         return(
-            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.01 } remoteInterfaceLocks={[]}>
-                <AvTransform translateY={ 0.1 } >
-                    <AvTransform rotateX={90}>
-                        <AvGrabButton modelUri={ g_builtinModelPlus } onClick={ this.drawCard.bind(this) } />
-                    </AvTransform>
-                    <AvTransform translateY={ 0.1 } >
-                        {this.state.drawnCards.map(cardVal => (
-                            <PlayingCard card={cardVal} key={cardVal} />
-                        ))}
-                    </AvTransform>
+            <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.04 } remoteInterfaceLocks={[]}>
+                <AvTransform translateY={ 0.05 } rotateX={45}>
+                    <AvGrabButton modelUri={ "models/card_draw_icon.glb" } onClick={ this.drawCard.bind(this) } />
                 </AvTransform>
-                <AvTransform translateX={0.06} rotateX={45} rotateY={45}>
+                <AvTransform translateY={ 0.2 } >
+                    {this.state.drawnCards.map(cardVal => (
+                        <PlayingCard card={cardVal} key={cardVal} />
+                    ))}
+                </AvTransform>
+                <AvTransform translateY={ 0.00 } translateX={0.06} rotateX={45} rotateY={45}>
                     <AvGrabButton modelUri={ "models/card_return_icon.glb" } onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>

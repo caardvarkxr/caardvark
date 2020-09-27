@@ -22,7 +22,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         super( props );
 
         let fullDeck = []
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 13; i++) {
             fullDeck.push(i);
         }                        
         this.shuffle(fullDeck);
@@ -90,8 +90,8 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
                         ))}
                     </AvTransform>
                 </AvTransform>
-                <AvTransform translateX={0.1} rotateX={90}>
-                    <AvGrabButton modelUri={ g_builtinModelGear} onClick={ this.gather.bind(this) } />
+                <AvTransform translateX={0.06} rotateX={45} rotateY={45}>
+                    <AvGrabButton modelUri={ "models/card_return_icon.glb" } onClick={ this.gather.bind(this) } />
                 </AvTransform>
             </AvStandardGrabbable>
         );

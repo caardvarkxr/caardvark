@@ -1,7 +1,9 @@
 
 export enum CardValue{
 	Spades1 = 0, Spades2 = 1,	Spades3 = 2,	Spades4 = 3,
-	Spades5 = 4, Spades6 = 5,	Spades7 = 6,	Spades8 = 7
+	Spades5 = 4, Spades6 = 5,	Spades7 = 6,	Spades8 = 7,
+	Spades9 = 8, Spades10 = 9, Spades11 = 10, Spades12 = 11,
+	Spades13 = 12
 	}
 
 /*export enum CardValue{

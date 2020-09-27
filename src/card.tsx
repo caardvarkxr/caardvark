@@ -29,10 +29,10 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
 
 		return (
 				<AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
-					<AvTransform scaleX={0.056} scaleY={0.001} scaleZ={0.0889} rotateX={90}> 
+					<AvTransform scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
 						<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[props.card] + ".png"} />
 					</AvTransform>
-					<AvTransform translateZ={-0.001} scaleX={0.056} scaleY={0.001} scaleZ={0.0889} rotateX={90}> 
+					<AvTransform translateZ={-0.001} scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
 						<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/cardback.png"} />
 					</AvTransform>
 				</AvComposedEntity>

@@ -56,7 +56,8 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 
 		let remoteLock = AvGadget.instance().initialInterfaces.find( ( value ) => 
 			value.iface == RemoteGadgetComponent.interfaceName );
-		this.moveableComponent =  new MoveableComponent( () => {}, false, true );
+		this.moveableComponent =  new MoveableComponent( () => {}, false, false );
+
 		if( remoteLock )
 		{
 			this.remoteComponent = new RemoteGadgetComponent(this.onRemoteEvent);

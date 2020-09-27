@@ -85,12 +85,12 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
                     console.log("Received unexpected reset event on non-remote");
                 }
                 else{
-                    this.setState({drawnCards: event.drawnCards, remainingCards: event.remainingCards, 
-                                   cardTransforms: this.state.cardTransforms}); // Don't update the card transforms here
+                    //this.setState({drawnCards: event.drawnCards, remainingCards: event.remainingCards, 
+                     //              cardTransforms: this.state.cardTransforms}); // Don't update the card transforms here
                 }
                 break;
             case "draw":
-                this.drawCard();
+                //this.drawCard();
                 break;
             case "gather":
                 this.gatherCards();
@@ -177,8 +177,8 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 				params: this.state
 			} );
 		}
-
         return(
+
             <AvStandardGrabbable modelUri={ g_builtinModelBox } modelScale={ 0.04 } remoteGadgetCallback={this.onRemoteEvent}
               useInitialParent={true} remoteInterfaceLocks={remoteInitLocks} ref={this.m_grabbableRef} >
 

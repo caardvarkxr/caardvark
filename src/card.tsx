@@ -1,4 +1,4 @@
-import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
+import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvGadgetSeed,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
 import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
 import bind from 'bind-decorator';
 import * as React from 'react';
@@ -6,6 +6,7 @@ import {CardValue} from './types';
 
 type CardProps = {
 	card: CardValue;
+	constrCallback: Function;
 }
 
 type CardState = {
@@ -34,6 +35,7 @@ const cardGrabMargin = 0.00;
 
 export class PlayingCard extends React.Component<CardProps, CardState>{
 
+    private m_composedRef =React.createRef<AvComposedEntity>();
 	private moveableComponent: MoveableComponent;
 
     private k_cardHitbox =
@@ -56,12 +58,19 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 		this.state = {
 			highlight: CardHighlightType.None,
 		}
+
+	}
+
+	@bind
+	public componentDidMount(){
+		this.props.constrCallback?.(this.props.card, this.moveableComponent.parent);
 	}
 
 	@bind
 	private async onMoveableUpdate()
 	{
 		let highlight;
+		console.log("Card moveableUpdate " + this.moveableComponent.state)
 		switch( this.moveableComponent.state )
 		{
 			default:
@@ -77,6 +86,7 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 
 			case MoveableComponentState.Grabbed:
 				highlight = CardHighlightType.Grabbed;
+				console.log("Card grabbed!!");
 				break;
 		}
 
@@ -87,14 +97,13 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 
 	}
 
+
 	public render(){
 
 		let scale = 1.4;
-		scale *= this.state.highlight == CardHighlightType.InRange ? 1.1 : 1.0;
-
-
+		scale *= this.state.highlight == CardHighlightType.InRange ? 1.1 : 1.0;			
 		return (
-			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox}> 
+			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox} ref={this.m_composedRef}> 
 				<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 					<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
 				</AvTransform>

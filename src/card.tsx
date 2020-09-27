@@ -1,4 +1,4 @@
-import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
+import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
 import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
 import bind from 'bind-decorator';
 import * as React from 'react';
@@ -9,6 +9,22 @@ type CardProps = {
 }
 
 type CardState = {
+	highlight: CardHighlightType;
+}
+
+export enum CardHighlightType
+{
+	/** Nothing interesting is going on with the grabbable. */
+	None = 0,
+
+	/** There is a grabber within grabbing range of the grabbable. */
+	InRange = 1,
+
+	/** There is a grabber actively grabbing the grabbable, and it isn't attached to anything. */
+	Grabbed = 2,
+
+	/** The grabbed grabbable is within drop range of a hook. */
+	InHookRange = 3,
 }
 
 const cardWidth = 0.057;
@@ -35,20 +51,54 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 	{
 		super( props );
 
-		this.moveableComponent =  new MoveableComponent( () => {}, false, false );
+		this.moveableComponent =  new MoveableComponent( this.onMoveableUpdate, false, true );
+
+		this.state = {
+			highlight: CardHighlightType.None,
+		}
 	}
 
-	public onTransformUpdated() {			
+	@bind
+	private async onMoveableUpdate()
+	{
+		let highlight;
+		switch( this.moveableComponent.state )
+		{
+			default:
+			case MoveableComponentState.Idle:
+			case MoveableComponentState.InContainer:
+				highlight = CardHighlightType.None;
+				break;
+
+			case MoveableComponentState.GrabberNearby:
+			case MoveableComponentState.Menu:
+				highlight = CardHighlightType.InRange;
+				break;
+
+			case MoveableComponentState.Grabbed:
+				highlight = CardHighlightType.Grabbed;
+				break;
+		}
+
+		this.setState( ( oldState: CardState ) =>
+		{
+			return { ...oldState, highlight };
+		} );
+
 	}
 
 	public render(){
 
+		let scale = 1.4;
+		scale *= this.state.highlight == CardHighlightType.InRange ? 1.1 : 1.0;
+
+
 		return (
 			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox}> 
-				<AvTransform scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
+				<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
 				</AvTransform>
-				<AvTransform translateZ={-0.001} scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
+				<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/cardback.png"} />
 				</AvTransform>
 			</AvComposedEntity>

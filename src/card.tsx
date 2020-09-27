@@ -10,7 +10,7 @@ type CardProps = {
 const cardWidth = 0.057;
 const cardHeight = 0.08;
 const cardDepth = 0.001;
-const cardGrabMargin = 0.01;
+const cardGrabMargin = 0.00;
 
 export const PlayingCard: React.FC<CardProps> = (props) => {
 

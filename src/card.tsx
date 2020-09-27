@@ -1,10 +1,14 @@
-import { AvComposedEntity,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, PrimitiveType } from '@aardvarkxr/aardvark-react';
-import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel,  } from '@aardvarkxr/aardvark-shared';
+import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
+import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
+import bind from 'bind-decorator';
 import * as React from 'react';
 import {CardValue} from './types';
 
 type CardProps = {
-    card: CardValue;
+	card: CardValue;
+}
+
+type CardState = {
 }
 
 const cardWidth = 0.057;
@@ -12,11 +16,11 @@ const cardHeight = 0.08;
 const cardDepth = 0.001;
 const cardGrabMargin = 0.01;
 
-export const PlayingCard: React.FC<CardProps> = (props) => {
+export class PlayingCard extends React.Component<CardProps, CardState>{
 
-    const [ moveable, setMoveable ] = React.useState( new MoveableComponent( () => {}, false, true ) );
+	private moveableComponent: MoveableComponent;
 
-    const k_cardVolume =
+    private k_cardHitbox =
 	{
 		type: EVolumeType.AABB,
 		aabb: 
@@ -25,16 +29,29 @@ export const PlayingCard: React.FC<CardProps> = (props) => {
 			zMin: -cardDepth - cardGrabMargin, zMax: cardDepth + cardGrabMargin,
 			yMin: -cardHeight - cardGrabMargin, yMax: cardHeight + cardGrabMargin,	
 		}
-    } as AvVolume;
+	} as AvVolume;
+
+	constructor( props: any )
+	{
+		super( props );
+
+		this.moveableComponent =  new MoveableComponent( () => {}, false, false );
+	}
+
+	public onTransformUpdated() {			
+	}
+
+	public render(){
 
 		return (
-			<AvComposedEntity components={[moveable]} volume={k_cardVolume}> 
+			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox}> 
 				<AvTransform scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
-					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[props.card] + ".png"} />
+					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
 				</AvTransform>
 				<AvTransform translateZ={-0.001} scaleX={0.056 * 1.4} scaleY={0.001} scaleZ={0.0889 * 1.4} rotateX={90}> 
 					<AvModel uri={g_builtinModelPanel} useTextureFromUrl={"card_textures/cardback.png"} />
 				</AvTransform>
 			</AvComposedEntity>
 		);
+	}
 }

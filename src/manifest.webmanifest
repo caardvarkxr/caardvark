@@ -4,7 +4,8 @@
 	"icons": [
 		{
 			"src": "models/caardvark_icon.glb",
-			"type": "model/gltf-binary"
+			"type": "model/gltf-binary",
+			"rotation": {"x": -90}
 		}
 	],
 	"aardvark": {

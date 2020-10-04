@@ -1,6 +1,6 @@
 {
 	"name": "caardvark",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Source for Cardvark gadget",
 	"main": "index.js",
 	"scripts": {

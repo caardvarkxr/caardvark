@@ -1,4 +1,4 @@
-import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
+import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvStandardGrabbable, AvTransform, GadgetSeedContainerComponent, GrabbableStyle, MoveableComponent, MoveableComponentState, NetworkedGadgetComponent, PrimitiveType, RemoteGadgetComponent } from '@aardvarkxr/aardvark-react';
 import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
 import bind from 'bind-decorator';
 import * as React from 'react';
@@ -94,14 +94,21 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 
 
 		return (
-			<AvComposedEntity components={[this.moveableComponent]} volume={this.k_cardHitbox}> 
-				<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
-					<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
-				</AvTransform>
-				<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
-					<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/cardback.png"} />
-				</AvTransform>
-			</AvComposedEntity>
+			<AvStandardGrabbable 
+				style={GrabbableStyle.NetworkedItem} 
+				itemId={"card"+this.props.card} 
+				volume={this.k_cardHitbox} 
+				canDropIntoContainers={ true }
+				appearance={
+				<>
+					<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
+						<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
+					</AvTransform>
+					<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
+						<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/cardback.png"} />
+					</AvTransform>
+				</>
+			} />
 		);
 	}
 }

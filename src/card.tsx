@@ -102,10 +102,10 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 				appearance={
 				<>
 					<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
-						<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
+						<AvModel uri={"models/card.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
 					</AvTransform>
 					<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
-						<AvModel uri={"models/panel.glb"} useTextureFromUrl={"card_textures/cardback.png"} />
+						<AvModel uri={"models/card.glb"} />
 					</AvTransform>
 				</>
 			} />

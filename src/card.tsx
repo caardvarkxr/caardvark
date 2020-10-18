@@ -6,6 +6,7 @@ import {CardValue} from './types';
 
 type CardProps = {
 	card: CardValue;
+	spawnerCallback?: (node: AvStandardGrabbable) => void;
 }
 
 type CardState = {
@@ -97,6 +98,7 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 			<AvStandardGrabbable 
 				style={GrabbableStyle.NetworkedItem} 
 				itemId={"card"+this.props.card} 
+				key={"card"+this.props.card} 
 				volume={this.k_cardHitbox} 
 				canDropIntoContainers={ true }
 				appearance={
@@ -107,8 +109,9 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 					<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 						<AvModel uri={"models/card.glb"} />
 					</AvTransform>
-				</>
-			} />
+				</> }
+				ref={this.props.spawnerCallback}
+			/>
 		);
 	}
 }

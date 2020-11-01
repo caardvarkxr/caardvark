@@ -1,15 +1,16 @@
 import {  AvComposedEntity, AvGadget, AvGrabButton, AvModel, AvStandardGrabbable, AvTransform, GrabbableStyle, MoveableComponent, MoveableComponentState  } from '@aardvarkxr/aardvark-react';
-import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelGear, g_builtinModelHook, g_builtinModelPlus, InitialInterfaceLock } from '@aardvarkxr/aardvark-shared';
+import { AvVolume, EVolumeType, filterActionsForGadget, g_builtinModelBox, g_builtinModelGear, g_builtinModelHook, g_builtinModelPlus, InitialInterfaceLock } from '@aardvarkxr/aardvark-shared';
 import bind from 'bind-decorator';
 import React, {useState} from 'react';
 import { PlayingCard } from './card';
-import { CardValue} from './types';
+import { CardItem, CardValue} from './types';
 
 const k_DeckInterface = "CardDeckState@1";
 
 interface DeckNetworkEvent  {
     type: "draw" | "reset" | "gather";
-    drawnCards?: CardValue[];
+    itemId?: string;
+    drawnCards?: CardItem[];
     remainingCards?: CardValue[];
 }
 
@@ -24,9 +25,12 @@ enum SpawnerPhase
 
 type DeckState = {
     spawnerPhase: SpawnerPhase;
-    drawnCards: CardValue[];
+    drawnCards: CardItem[];
     remainingCards: CardValue[];
-    newlyDrawnCard?: CardValue;
+    newlyDrawnCard?: CardItem;
+
+    //
+    loadingCard?: CardItem;
 }
 
 
@@ -35,6 +39,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
     private m_grabbableRef = React.createRef<AvStandardGrabbable>();
     private grabspawnerMoveableComp = new MoveableComponent(this.onGrabspawnerUpdate, false, false);
     private grabspawner = React.createRef< AvComposedEntity >();
+    private localCardID = 0;
 
 
 	constructor( props: any )
@@ -42,8 +47,11 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         super( props );
 
         let fullDeck = []
-        for (let i = 0; i < 52; i++) {
-            fullDeck.push(i);
+        for (let i = 0; i < 13; i++) {
+            fullDeck.push(CardValue.Clubs1 + i);
+            fullDeck.push(CardValue.Diamonds1 + i);
+            fullDeck.push(CardValue.Hearts1 + i);
+            fullDeck.push(CardValue.Spades1 + i);
         }                        
 
         this.shuffle(fullDeck);
@@ -58,11 +66,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 
 
     public componentDidMount(){
-        if( !AvGadget.instance().isRemote )
-		{
-			//AvGadget.instance().registerForSettings( this.onSettingsReceived );
-		}
-		else // We are remote!
+        if( AvGadget.instance().isRemote )
 		{
             let params = AvGadget.instance().findInitialInterface( k_DeckInterface )?.params as DeckState;
             if(params){
@@ -88,10 +92,12 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
                 }
                 else{
                     this.setState({drawnCards: event.drawnCards, remainingCards: event.remainingCards});
+                    console.log("Remote received reset")
+                    console.log(event)
                 }
                 break;
             case "draw":
-                this.drawCard();
+                this.drawCard(event.itemId);
                 break;
             case "gather":
                 this.gatherCards();
@@ -122,7 +128,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
             let drawn = this.state.drawnCards;
 
             for(let i = 0; i < len; i++){
-                deck.push(drawn.pop());
+                deck.push(drawn.pop().cardValue);
             }
             this.shuffle(deck);
 
@@ -150,12 +156,27 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
         return cards;
     }
     
-    public drawCard(){
+    public drawCard(itemId?: string){
          if( AvGadget.instance().isRemote )
 		{
             console.log("remote drawCard()")
-			let e: DeckNetworkEvent = { type: "draw" };
-			this.m_grabbableRef.current?.sendRemoteEvent( e, true );
+
+            // IMPORTANT TODO: Need to add a key that differentiates between different remote clients
+            // This is a WIP to test with a single client
+            let newItemId = "remote"+this.localCardID++;
+            let e: DeckNetworkEvent = { type: "draw", itemId:  newItemId};
+            this.m_grabbableRef.current?.sendRemoteEvent( e, true );
+
+
+            let loadingCard : CardItem = {cardValue: CardValue.Loading, itemId: newItemId};
+            this.setState({
+                spawnerPhase: SpawnerPhase.WaitingForRef,
+                remainingCards: this.state.remainingCards,
+                drawnCards: this.state.drawnCards,
+                newlyDrawnCard: loadingCard
+            });
+
+            console.log("Remote new loading card. Item Id" + newItemId);
 		}
 		else
 		{
@@ -166,18 +187,39 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
             }
             let deck = this.state.remainingCards;
 
-            let newCard = deck.pop();
+            let newCard : CardItem = {cardValue: deck.pop(),
+                                      itemId: itemId ? itemId : "main"+this.localCardID++};
+            
+            console.log("Drew new card ")
+            console.log(newCard)
 
-            this.setState({
-                spawnerPhase: SpawnerPhase.WaitingForRef,
-                remainingCards: deck,
-                drawnCards: this.state.drawnCards,
-                newlyDrawnCard: newCard
-            });
-            let e: DeckNetworkEvent = { type: "reset",
-                                       remainingCards: deck,
-                                       drawnCards: [...this.state.drawnCards, newCard] };
-            this.m_grabbableRef.current?.sendRemoteEvent( e, true );
+            if(itemId){ // itemId means that the card was already drawn elsewhere
+                this.setState({
+                    spawnerPhase: SpawnerPhase.WaitingForRef,
+                    remainingCards: deck,
+                    drawnCards: [...this.state.drawnCards, newCard],
+                    newlyDrawnCard: this.state.newlyDrawnCard
+                });
+                let e: DeckNetworkEvent = { type: "reset",
+                                            remainingCards: deck,
+                                            drawnCards: this.state.drawnCards };
+                this.m_grabbableRef.current?.sendRemoteEvent( e, true );
+            }else{
+                this.setState({
+                    spawnerPhase: SpawnerPhase.WaitingForRef,
+                    remainingCards: deck,
+                    drawnCards: this.state.drawnCards,
+                    newlyDrawnCard: newCard
+                });
+                let e: DeckNetworkEvent = { type: "reset",
+                                            remainingCards: deck,
+                                            drawnCards: [...this.state.drawnCards, newCard] };
+                this.m_grabbableRef.current?.sendRemoteEvent( e, true );
+
+            }
+
+
+
         }
     }
 
@@ -219,12 +261,12 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 
         let drawnCards: JSX.Element[] = [];
 
-        this.state.drawnCards.map(cardVal => (
-            drawnCards.push(<PlayingCard card={cardVal} key={cardVal}/>)
+        this.state.drawnCards.map(cardItem => (
+            drawnCards.push(<PlayingCard card={cardItem} key={cardItem.itemId}/>)
             ))
 
         if(this.state.newlyDrawnCard){
-            drawnCards.push(<PlayingCard card={this.state.newlyDrawnCard} key={this.state.newlyDrawnCard} 
+            drawnCards.push(<PlayingCard card={this.state.newlyDrawnCard} key={this.state.newlyDrawnCard.itemId} 
                 spawnerCallback={this.onNewCardSpawned}/>);
             console.log("Rendering new card");
         }

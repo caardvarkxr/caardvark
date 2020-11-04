@@ -40,6 +40,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
     private grabspawnerMoveableComp = new MoveableComponent(this.onGrabspawnerUpdate, false, false);
     private grabspawner = React.createRef< AvComposedEntity >();
     private localCardID = 0;
+    private instanceID = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
 
 	constructor( props: any )
@@ -161,9 +162,7 @@ class CardDeck extends React.Component<DeckProps, DeckState>{
 		{
             console.log("remote drawCard()")
 
-            // IMPORTANT TODO: Need to add a key that differentiates between different remote clients
-            // This is a WIP to test with a single client
-            let newItemId = "remote"+this.localCardID++;
+            let newItemId = "r" + this.instanceID + this.localCardID++;
             let e: DeckNetworkEvent = { type: "draw", itemId:  newItemId};
             this.m_grabbableRef.current?.sendRemoteEvent( e, true );
 

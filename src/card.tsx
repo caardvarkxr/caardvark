@@ -2,10 +2,11 @@ import { AvComposedEntity,  AvGadget,  AvGadgetList,  AvModel,  AvPrimitive, AvS
 import { AvVolume, EVolumeType, g_builtinModelBox, g_builtinModelCylinder, g_builtinModelPanel, infiniteVolume, InitialInterfaceLock,  } from '@aardvarkxr/aardvark-shared';
 import bind from 'bind-decorator';
 import * as React from 'react';
-import {CardValue} from './types';
+import {CardValue, CardItem} from './types';
 
 type CardProps = {
-	card: CardValue;
+	card: CardItem;
+	spawnerCallback?: (node: AvStandardGrabbable) => void;
 }
 
 type CardState = {
@@ -96,19 +97,21 @@ export class PlayingCard extends React.Component<CardProps, CardState>{
 		return (
 			<AvStandardGrabbable 
 				style={GrabbableStyle.NetworkedItem} 
-				itemId={"card"+this.props.card} 
+				itemId={this.props.card.itemId && (this.props.card.itemId) || ("card"+this.props.card.cardValue)} 
+				key={"card"+this.props.card} 
 				volume={this.k_cardHitbox} 
 				canDropIntoContainers={ true }
 				appearance={
 				<>
 					<AvTransform scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
-						<AvModel uri={"models/card.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card] + ".png"} />
+						<AvModel uri={"models/card.glb"} useTextureFromUrl={"card_textures/" + CardValue[this.props.card.cardValue] + ".png"} />
 					</AvTransform>
 					<AvTransform translateZ={-0.001} scaleX={0.056 * scale} scaleY={0.001} scaleZ={0.0889 * scale} rotateX={90}> 
 						<AvModel uri={"models/card.glb"} />
 					</AvTransform>
-				</>
-			} />
+				</> }
+				ref={this.props.spawnerCallback}
+			/>
 		);
 	}
 }

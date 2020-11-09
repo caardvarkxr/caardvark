@@ -1,15 +1,28 @@
+export type CardItem = {
+	cardValue: CardValue;
+	itemId?: string;
+}
+
 export enum CardValue{
-	Clubs1 = 0,	Clubs2 = 1,	Clubs3 = 2,	Clubs4 = 3,
-	Clubs5 = 4,	Clubs6 = 5,	Clubs7 = 6,	Clubs8 = 7,
-	Clubs9 = 8,	Clubs10 = 9, Clubs11 = 10, Clubs12 = 11,
-	Clubs13 = 12, Spades1 = 13,	Spades2 = 14, Spades3 = 15,
-	Spades4 = 16, Spades5 = 17,	Spades6 = 18, Spades7 = 19,
-	Spades8 = 20, Spades9 = 21,	Spades10 = 22, Spades11 = 23,
-	Spades12 = 24, Spades13 = 25, Diamonds1 = 26, Diamonds2 = 27,
-	Diamonds3 = 28,	Diamonds4 = 29,	Diamonds5 = 30,	Diamonds6 = 31,
-	Diamonds7 = 32,	Diamonds8 = 33,	Diamonds9 = 34,	Diamonds10 = 35,
-	Diamonds11 = 36, Diamonds12 = 37, Diamonds13 = 38, Hearts1 = 39,
-	Hearts2 = 40, Hearts3 = 41,	Hearts4 = 42, Hearts5 = 43,
-	Hearts6 = 44, Hearts7 = 45, Hearts8 = 46, Hearts9 = 47,
-	Hearts10 = 48, Hearts11 = 49, Hearts12 = 50, Hearts13 = 51
+	Loading = 0,
+
+	Clubs1 = 101,	Clubs2,	Clubs3,	Clubs4,
+	Clubs5,	Clubs6,	Clubs7,	Clubs8,
+	Clubs9,	Clubs10, Clubs11, Clubs12,
+	Clubs13,
+
+	Diamonds1 = 201, Diamonds2,
+	Diamonds3,	Diamonds4,	Diamonds5,	Diamonds6,
+	Diamonds7,	Diamonds8,	Diamonds9,	Diamonds10,
+	Diamonds11, Diamonds12, Diamonds13, 
+	
+	Hearts1 = 301, Hearts2, Hearts3,	Hearts4, Hearts5,
+	Hearts6, Hearts7, Hearts8, Hearts9,
+	Hearts10, Hearts11, Hearts12, Hearts13,
+
+	Spades1 = 401,	Spades2, Spades3,
+	Spades4, Spades5,	Spades6, Spades7,
+	Spades8, Spades9,	Spades10, Spades11,
+	Spades12, Spades13,
+
 	}
